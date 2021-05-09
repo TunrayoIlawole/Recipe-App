@@ -1,0 +1,17 @@
+{
+  "name": "recipe-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "parcel build index.html",
+    "develop": "parcel index.html"
+  },
+  "author": "Tunrayo",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "parcel": "*"
+  }
+}
