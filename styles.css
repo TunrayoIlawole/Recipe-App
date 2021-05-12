@@ -172,13 +172,14 @@ body {
 }
   
 .loader {
+  width: 100%;
   margin: 5rem auto;
   text-align: center; 
 }
 .loader svg {
   height: 5.5rem;
   width: 5.5rem;
-  fill: #F59A83;
+  fill: #FFF;
   transform-origin: 44% 50%;
   animation: rotate 1.5s infinite linear; 
 }
