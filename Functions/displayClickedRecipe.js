@@ -1,5 +1,6 @@
 import getIngredients from './getIngredients';
 import displayIngredients from './displayIngredients';
+import displayShoppingList from './displayShoppingList';
 
 const domElements = {
   recipe: document.querySelector('.recipe')
@@ -18,14 +19,14 @@ function displayClickedRecipe(result) {
 <div class="recipe-details">
   <div class="recipe-info">
     <svg class="recipe-info-icon">
-      <use href="assets/icons.svg#icon-clock"></use>
+      <use href="../assets/icons.svg#icon-clock"></use>
     </svg>
     <span class="recipe-info-data recipe-info-data-minutes">45</span>
     <span class="recipe-info-text">minutes</span>
   </div>
   <button class="btn-round">
     <svg class="">
-      <use href="assets/icons.svg#icon-bookmark-fill"></use>
+      <use href="../assets/icons.svg#icon-bookmark-fill"></use>
     </svg>
   </button>
 </div>
@@ -57,12 +58,19 @@ function displayClickedRecipe(result) {
   >
     <span>Directions</span>
     <svg class="search-icon">
-      <use href="assets/icons.svg#icon-arrow-right"></use>
+      <use href="../assets/icons.svg#icon-arrow-right"></use>
     </svg>
   </a>
 </div>
   `
   domElements.recipe.innerHTML = markup;
+
+  const addButton = document.querySelector('.recipe__btn--add');
+  addButton.addEventListener('click', () => {
+    console.log(result.recipe_id);
+    console.log(ingredients);
+    displayShoppingList(ingredients);
+  })
 
 }
 

@@ -4,7 +4,7 @@ function displayIngredients(ingredient) {
     return `
     <li class="recipe-ingredient">
         <svg class="recipe-icon">
-            <use href="src/img/icons.svg#icon-check"></use>
+            <use href="../assets/icons.svg#icon-check"></use>
         </svg>
         <div class="recipe-quantity">${ingredient.count}</div>
         <div class="recipe-description">
