@@ -562,11 +562,12 @@ border-top: 1px solid #fff;
 }
 .recipe-love {
   background-image: linear-gradient(to right bottom, #FBDB89, #F48982);
-  border-radius: 50%;
+  color: #FFF;
+  border-radius: 10px;
   border: none;
   cursor: pointer;
   height: 4.5rem;
-  width: 4.5rem;
+  width: 10rem;
   margin-left: auto;
   transition: all .2s;
   display: flex;
