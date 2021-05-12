@@ -8,11 +8,12 @@ const displayResult = (results) => {
     results.forEach(item => {
         const resultItem = document.createElement('li');
         resultItem.classList.add('preview');
+        resultItem.id = `${item.recipe_id}`;
     
         const resultLink = document.createElement('a');
         resultLink.className = "preview-link preview-link-active";
         resultLink.setAttribute('href', `#${item.recipe_id}`);
-        resultLink.id = `${item.recipe_id}`;
+        
 
         const figure = document.createElement('figure');
         figure.classList.add('preview-fig');
@@ -32,7 +33,7 @@ const displayResult = (results) => {
         const resultGenerated = document.createElement('div');
         resultGenerated.classList.add('preview-user-generated');
         const resultSvg = `<svg>
-            <use href = "assets/icons.svg#icon-user"></use>
+            <use href = "../assets/icons.svg#icon-user"></use>
         </svg>`;
         resultGenerated.innerHTML = resultSvg;
 
@@ -47,32 +48,12 @@ const displayResult = (results) => {
 
         domElements.results.append(resultItem);
 
-        resultLink.addEventListener('click', (e) => {
-            if (e.target.classList.contains('preview-link')) {
-                const id = e.target.id;
-                console.log(id);
-                getClickedRecipe(id);
-            }
+        resultItem.addEventListener('click', () => {
+            const id = resultItem.id;
+            getClickedRecipe(id);
         })
     });
     
 }
 
 export default displayResult;
-
-// <!-- <li class = "preview">
-//                     <a class = "preview-link preview-link-active" href = "#23456">
-//                         <figure class = "preview-fig">
-//                             <img src = "" alt = "Test" />
-//                         </figure>
-//                         <div class = "preview-data">
-//                             <h4 class = "preview-title">Pasta with Tomato Cream...</h4>
-//                             <p class = "preview-publisher">The Pioneer Woman</p>
-//                             <div class = "preview-user-generated">
-//                                 <svg>
-//                                     <use href = "assets/icons.svg#icon-user"></use>
-//                                 </svg>
-//                             </div>
-//                         </div>
-//                     </a>
-//                 </li> -->
