@@ -5,7 +5,7 @@ const domElement = {
 const displayShoppingList = (result) => {
     result.forEach(ingredient => {
         const markup = `
-            <li class="shopping-item">
+            <li class="shopping-item" data-itemid=${ingredient.ingredient}>
                 <div class="shopping-count">
                     <input type="number" value="${ingredient.count}" step="${ingredient.count}">
                     <p>${ingredient.unit}</p>
@@ -19,6 +19,15 @@ const displayShoppingList = (result) => {
 
         domElement.shoppingList.insertAdjacentHTML('beforeend', markup);
     })
+
+    const deleteButtons = document.querySelectorAll('.shopping-delete');
+        deleteButtons.forEach(deleteButton => {
+            deleteButton.addEventListener('click', (e) => {
+                const item = e.target.parentElement;
+    
+                if(item) item.parentElement.removeChild(item);
+            })
+        })
     
 }
 
