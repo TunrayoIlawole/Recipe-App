@@ -5,15 +5,13 @@ const domElements = {
     form: document.querySelector('.search'),
     input: document.querySelector('.search-field'),
     results: document.querySelector('.results'),
-    loaderCon: document.querySelector('.loader')
+    loader: document.querySelector('.loader-con'),
+    theCart: document.querySelector('.cart'),
+    heartIcon: document.querySelector('.heart')
 }
 
 const loader = `
-<div class = "loader">
-    <svg>
-        <use href = "assets/icons.svg#icon-cw"></use>
-    </svg>
-</div>
+<div class = "loader"></div>
 `;
 
 function handleSubmit(e) {
@@ -26,14 +24,13 @@ function handleSubmit(e) {
     const searchResults = domElements.results;
     searchResults.innerHTML = '';
 
-    domElements.loaderCon.insertAdjacentHTML('afterbegin', loader);
+    domElements.loader.insertAdjacentHTML('afterbegin', loader);
 
     try {
         const results = getResults(searchQuery);
 
         results.then(response => {
             const recipes = response.recipes;
-            console.log(recipes);
 
             const loader = document.querySelector('.loader');
 
@@ -51,6 +48,6 @@ function handleSubmit(e) {
 
 domElements.form.addEventListener('submit', handleSubmit);
 
-// let requestFile = "https://forkify-api.herokuapp.com/api/search?q=pizza";
-
-// let stuff = "https://forkify-api.herokuapp.com/api/get?rId=47746";
+domElements.heartIcon.addEventListener('click', () => {
+    domElements.theCart.classList.toggle('show');
+})

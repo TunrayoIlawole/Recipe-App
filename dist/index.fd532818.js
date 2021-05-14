@@ -450,19 +450,29 @@ var _FunctionsDisplayResultDefault = _parcelHelpers.interopDefault(_FunctionsDis
 const domElements = {
   form: document.querySelector('.search'),
   input: document.querySelector('.search-field'),
-  results: document.querySelector('.results')
+  results: document.querySelector('.results'),
+  loader: document.querySelector('.loader-con'),
+  theCart: document.querySelector('.cart'),
+  heartIcon: document.querySelector('.heart')
 };
+const loader = `
+<div class = "loader"></div>
+`;
 function handleSubmit(e) {
   e.preventDefault();
   const inputValue = domElements.input.value;
   const searchQuery = inputValue.trim();
   const searchResults = domElements.results;
   searchResults.innerHTML = '';
+  domElements.loader.insertAdjacentHTML('afterbegin', loader);
   try {
     const results = _FunctionsGetResultsDefault.default(searchQuery);
     results.then(response => {
       const recipes = response.recipes;
-      console.log(recipes);
+      const loader = document.querySelector('.loader');
+      if (loader) {
+        loader.parentElement.removeChild(loader);
+      }
       _FunctionsDisplayResultDefault.default(recipes);
     });
   } catch (error) {
@@ -470,6 +480,9 @@ function handleSubmit(e) {
   }
 }
 domElements.form.addEventListener('submit', handleSubmit);
+domElements.heartIcon.addEventListener('click', () => {
+  domElements.theCart.classList.toggle('show');
+});
 
 },{"./Functions/getResults":"6ms5S","./Functions/displayResult":"62ro5","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"6ms5S":[function(require,module,exports) {
 var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
@@ -493,16 +506,24 @@ _parcelHelpers.defineInteropFlag(exports);
 var _getClickedRecipe = require('./getClickedRecipe');
 var _getClickedRecipeDefault = _parcelHelpers.interopDefault(_getClickedRecipe);
 const domElements = {
-  results: document.querySelector('.results')
+  results: document.querySelector('.results'),
+  loaderCon: document.querySelector('.loader')
 };
+const loader = `
+<div class = "loader">
+    <svg>
+        <use href = "img/icons.svg#icon-cw"></use>
+    </svg>
+</div>
+`;
 const displayResult = results => {
   results.forEach(item => {
     const resultItem = document.createElement('li');
     resultItem.classList.add('preview');
+    resultItem.id = `${item.recipe_id}`;
     const resultLink = document.createElement('a');
     resultLink.className = "preview-link preview-link-active";
     resultLink.setAttribute('href', `#${item.recipe_id}`);
-    resultLink.id = `${item.recipe_id}`;
     const figure = document.createElement('figure');
     figure.classList.add('preview-fig');
     const resultImage = document.createElement('img');
@@ -520,7 +541,7 @@ const displayResult = results => {
     const resultGenerated = document.createElement('div');
     resultGenerated.classList.add('preview-user-generated');
     const resultSvg = `<svg>
-            <use href = "assets/icons.svg#icon-user"></use>
+            <use href = "../assets/icons.svg#icon-user"></use>
         </svg>`;
     resultGenerated.innerHTML = resultSvg;
     resultData.append(resultTitle);
@@ -530,18 +551,15 @@ const displayResult = results => {
     resultLink.append(resultData);
     resultItem.append(resultLink);
     domElements.results.append(resultItem);
-    resultLink.addEventListener('click', e => {
-      if (e.target.classList.contains('preview-link')) {
-        const id = e.target.id;
-        console.log(id);
-        _getClickedRecipeDefault.default(id);
-      }
+    resultItem.addEventListener('click', () => {
+      const id = resultItem.id;
+      _getClickedRecipeDefault.default(id);
     });
   });
 };
 exports.default = displayResult;
 
-},{"@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y","./getClickedRecipe":"25SrF"}],"25SrF":[function(require,module,exports) {
+},{"./getClickedRecipe":"25SrF","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"25SrF":[function(require,module,exports) {
 var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
 _parcelHelpers.defineInteropFlag(exports);
 var _api = require('./api');
@@ -560,13 +578,17 @@ function getClickedRecipe(keyword) {
 }
 exports.default = getClickedRecipe;
 
-},{"./api":"7aSqL","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y","./displayClickedRecipe":"2gAkE"}],"2gAkE":[function(require,module,exports) {
+},{"./api":"7aSqL","./displayClickedRecipe":"2gAkE","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"2gAkE":[function(require,module,exports) {
 var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
 _parcelHelpers.defineInteropFlag(exports);
 var _getIngredients = require('./getIngredients');
 var _getIngredientsDefault = _parcelHelpers.interopDefault(_getIngredients);
 var _displayIngredients = require('./displayIngredients');
 var _displayIngredientsDefault = _parcelHelpers.interopDefault(_displayIngredients);
+var _displayShoppingList = require('./displayShoppingList');
+var _displayShoppingListDefault = _parcelHelpers.interopDefault(_displayShoppingList);
+var _likeRecipe = require('./likeRecipe');
+var _likeRecipeDefault = _parcelHelpers.interopDefault(_likeRecipe);
 const domElements = {
   recipe: document.querySelector('.recipe')
 };
@@ -588,10 +610,8 @@ function displayClickedRecipe(result) {
     <span class="recipe-info-data recipe-info-data-minutes">45</span>
     <span class="recipe-info-text">minutes</span>
   </div>
-  <button class="btn-round">
-    <svg class="">
-      <use href="assets/icons.svg#icon-bookmark-fill"></use>
-    </svg>
+  <button class="btn-round recipe-love">
+    Add to favorites 🤍
   </button>
 </div>
 
@@ -602,7 +622,7 @@ function displayClickedRecipe(result) {
   </ul>
   <button class = "btn-small recipe__btn recipe__btn--add">
     <svg class = "search__icon">
-    <use href = "../assets/icons.svg#icon-shopping-cart"></use>
+    <use href = "assets/icons.svg#icon-shopping-cart"></use>
     </svg>
     <span>Add to shopping list</span>
   </button>
@@ -628,10 +648,18 @@ function displayClickedRecipe(result) {
 </div>
   `;
   domElements.recipe.innerHTML = markup;
+  const addButton = document.querySelector('.recipe__btn--add');
+  addButton.addEventListener('click', () => {
+    _displayShoppingListDefault.default(ingredients);
+  });
+  const likeButton = document.querySelector('.recipe-love');
+  likeButton.addEventListener('click', () => {
+    _likeRecipeDefault.default(result, result.recipe_id, likeButton);
+  });
 }
 exports.default = displayClickedRecipe;
 
-},{"./getIngredients":"4O2tS","./displayIngredients":"2L6BO","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"4O2tS":[function(require,module,exports) {
+},{"./getIngredients":"4O2tS","./displayIngredients":"2L6BO","./displayShoppingList":"3Bf2D","./likeRecipe":"490hG","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"4O2tS":[function(require,module,exports) {
 var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
 _parcelHelpers.defineInteropFlag(exports);
 function getIngredients(ingredients) {
@@ -688,7 +716,7 @@ function displayIngredients(ingredient) {
   return `
     <li class="recipe-ingredient">
         <svg class="recipe-icon">
-            <use href="src/img/icons.svg#icon-check"></use>
+            <use href="../assets/icons.svg#icon-check"></use>
         </svg>
         <div class="recipe-quantity">${ingredient.count}</div>
         <div class="recipe-description">
@@ -699,6 +727,119 @@ function displayIngredients(ingredient) {
 }
 exports.default = displayIngredients;
 
-},{"./getIngredients":"4O2tS","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}]},["A7H4y","4ee1I"], "4ee1I", "parcelRequire5515")
+},{"./getIngredients":"4O2tS","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"3Bf2D":[function(require,module,exports) {
+var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
+_parcelHelpers.defineInteropFlag(exports);
+const domElement = {
+  shoppingList: document.querySelector('.shopping-list')
+};
+const displayShoppingList = result => {
+  result.forEach(ingredient => {
+    const markup = `
+            <li class="shopping-item" data-itemid=${ingredient.ingredient}>
+                <div class="shopping-count">
+                    <input type="number" value="${ingredient.count}" step="${ingredient.count}">
+                    <p>${ingredient.unit}</p>
+                </div>
+                <p class="shopping-description">${ingredient.ingredient}</p>
+                <button class="shopping-delete btn-tiny">
+                    X
+                </button>
+            </li>
+            `;
+    domElement.shoppingList.insertAdjacentHTML('beforeend', markup);
+  });
+  const deleteButtons = document.querySelectorAll('.shopping-delete');
+  deleteButtons.forEach(deleteButton => {
+    deleteButton.addEventListener('click', e => {
+      const item = e.target.parentElement;
+      if (item) item.parentElement.removeChild(item);
+    });
+  });
+};
+exports.default = displayShoppingList;
+
+},{"@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"490hG":[function(require,module,exports) {
+var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
+_parcelHelpers.defineInteropFlag(exports);
+var _displayLikedRecipe = require('./displayLikedRecipe');
+var _displayLikedRecipeDefault = _parcelHelpers.interopDefault(_displayLikedRecipe);
+const domElement = {
+  heart: document.querySelector('.heart')
+};
+const cart = [];
+const likeRecipe = (recipe, id, button) => {
+  domElement.heart.innerHTML = '🧡';
+  const prevItem = cart.find(item => item.id === id || item.recipe_id === id);
+  if (!prevItem) {
+    cart.push({
+      ...recipe,
+      id: id
+    });
+  } else {
+    button.disabled = true;
+  }
+  console.log(cart);
+  _displayLikedRecipeDefault.default(cart);
+};
+exports.default = likeRecipe;
+
+},{"@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y","./displayLikedRecipe":"1SwjF"}],"1SwjF":[function(require,module,exports) {
+var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
+_parcelHelpers.defineInteropFlag(exports);
+const domElement = {
+  theCart: document.querySelector('.cart'),
+  heart: document.querySelector('.heart'),
+  cartEmpty: document.querySelector('.cart-empty')
+};
+const displayLikedRecipe = cart => {
+  domElement.theCart.innerHTML = '';
+  cart.forEach(item => {
+    const cartItem = document.createElement('div');
+    cartItem.classList.add('cart-item');
+    cartItem.id = item.recipe_id;
+    const itemDetails = document.createElement('div');
+    itemDetails.classList.add('item-details');
+    const itemImage = document.createElement('img');
+    itemImage.src = item.image_url;
+    itemImage.alt = item.title;
+    const itemName = document.createElement('p');
+    itemName.classList.add('item-title');
+    itemName.textContent = item.title;
+    itemDetails.append(itemImage);
+    itemDetails.append(itemName);
+    const removeItem = document.createElement('div');
+    removeItem.classList.add('remove-nom');
+    const remove = document.createElement('p');
+    remove.classList.add('remove');
+    remove.textContent = 'X';
+    removeItem.append(remove);
+    cartItem.append(itemDetails);
+    cartItem.append(removeItem);
+    removeItem.addEventListener('click', e => {
+      const id = item.id;
+      let ids, index;
+      ids = cart.map(curr => {
+        return curr.id;
+      });
+      index = ids.indexOf(id);
+      if (index !== -1) {
+        cart.splice(index, 1);
+      }
+      if (cart.length === 0) {
+        domElement.cartEmpty.display = "block";
+        domElement.heart.innerHTML = '🤍';
+      } else {
+        domElement.cartEmpty.display = "none";
+        domElement.heart.innerHTML = '🧡';
+      }
+      displayLikedRecipe(cart);
+    });
+    domElement.theCart.append(cartItem);
+  });
+};
+exports.default = displayLikedRecipe;
+
+},{"@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}]},["A7H4y","4ee1I"], "4ee1I", "parcelRequire5515")
 
 //# sourceMappingURL=index.fd532818.js.map
