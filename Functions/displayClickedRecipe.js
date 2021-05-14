@@ -1,6 +1,7 @@
 import getIngredients from './getIngredients';
 import displayIngredients from './displayIngredients';
 import displayShoppingList from './displayShoppingList';
+import likeRecipe from './likeRecipe';
 
 const domElements = {
   recipe: document.querySelector('.recipe')
@@ -65,9 +66,12 @@ function displayClickedRecipe(result) {
 
   const addButton = document.querySelector('.recipe__btn--add');
   addButton.addEventListener('click', () => {
-    console.log(result.recipe_id);
-    console.log(ingredients);
     displayShoppingList(ingredients);
+  });
+
+  const likeButton = document.querySelector('.recipe-love');
+  likeButton.addEventListener('click', () => {
+    likeRecipe(result, result.recipe_id, likeButton);
   })
 
 }
