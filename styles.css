@@ -209,7 +209,23 @@ body {
   
 .heart {
     font-size: 50px;
+    cursor: pointer;
 }
+@keyframes heart {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.heart.active {
+  animation: heart 1s linear 0s;
+}
+
 .search {
   background-color: #fff;
   border-radius: 10rem;
@@ -701,4 +717,78 @@ border-top: 1px solid #fff;
 .shopping-item:hover .shopping-delete {
   opacity: 1;
   visibility: visible; 
+}
+
+.cart {
+  width: 300px;
+  height: 250px;
+  border: 1px solid #000;
+  overflow: auto;
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  background-color: #FEFEFE;
+  padding: 10px;
+  opacity: 0;
+  transition: 300ms;
+  pointer-events: none;
+}
+
+.cart.show {
+  display: block;
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 100;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  color: #000;
+  margin-bottom: 5px;
+}
+
+.cart-item img {
+  width: 80px;
+  border-radius: 10px;
+}
+
+.item-title {
+  font-size: 1rem;
+  margin: 0
+}
+
+.remove {
+  cursor: pointer;
+  font-size: 2rem;
+}
+
+.loader {
+  margin: 20px auto;
+  border: 16px solid #ccc;
+  width: 100px;
+  height: 100px;
+  border-top-color: #F59A83;
+  border-bottom-color: #F59A83;
+  border-radius: 50%;
+  animation: spin 4s linear infinite;
+  -webkit-animation: spin 4s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
