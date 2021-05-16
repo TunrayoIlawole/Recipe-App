@@ -8,6 +8,33 @@
     <title>forkify // Search over 1,000,000 recipes</title>
 </head>
 <body>
+    <div class="modal">
+        <button class="close-modal">&times;</button>
+        <h1>Recipe of The Day ✨</h1>
+        <div class="recipe-con">
+            <!-- <div class = "recipe-image">
+                <img src = "assets/logo.png" alt = "Some dumb recipe" />
+            </div>
+            <h3>Some dump recipe</h3>
+            <div class = "recipe-details">
+                <div class="recipe-directions">
+                    <h2 class="heading-2">How to cook it</h2>
+                    <p class="recipe-directions-text">
+                      This recipe was carefully designed and tested by
+                      <span class="recipe-publisher">result.publisher</span>. Please check out
+                      directions at their website.
+                    </p>
+                    <a
+                      class="btn-small recipe-btn"
+                      href="#"
+                      target="_blank"
+                    >
+                      <span>Directions ➡️</span>
+                    </a>
+                  </div>
+            </div> -->
+        </div>
+    </div>
     <div class="container">
         <header class="header">
             <img src="/logo.f74eab89.png" alt="logo" class="header-logo">
@@ -27,9 +54,10 @@
         </div>
 
         <div class="search-results">
+            <p class="error hidden">No recipes matched your search query</p>
           <div class="loader-con"></div>
             <ul class="results">
-
+                
             </ul>
 
             <div class="pagination">
@@ -78,7 +106,7 @@
 
     </div>
 
-    
+    <div class="overlay"></div>    
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/index.b504a646.js"></script>
