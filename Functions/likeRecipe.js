@@ -1,5 +1,7 @@
 import displayLikedRecipe from './displayLikedRecipe';
 
+const common = require('./common');
+
 const domElement = {
     heart: document.querySelector('.heart')
 }
@@ -21,7 +23,19 @@ const likeRecipe = (recipe, id, button) => {
     }
     
     console.log(cart);
+    common.persistData({ key: 'cartItems', isObject: true, data: cart })
+
+    // localStorage.setItem('likes', JSON.stringify(cart));
     displayLikedRecipe(cart);
 }
 
 export default likeRecipe;
+
+window.addEventListener('load', () => {
+    cartItem = common.readStorage({
+        key: 'cartItems',
+        isObject: true
+    })
+
+    displayLikedRecipe(cartItem);
+})

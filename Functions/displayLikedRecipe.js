@@ -1,3 +1,5 @@
+const common = require('./common');
+
 const domElement = {
     theCart: document.querySelector('.cart'),
     heart: document.querySelector('.heart'),
@@ -6,6 +8,7 @@ const domElement = {
 
 const displayLikedRecipe = (cart) => {
     domElement.theCart.innerHTML = '';
+
     cart.forEach(item => {
         const cartItem = document.createElement('div');
         cartItem.classList.add('cart-item');
@@ -59,11 +62,22 @@ const displayLikedRecipe = (cart) => {
             }
 
             displayLikedRecipe(cart);
+            common.persistData({ key: 'cartItems', isObject: true, data: cart });
 
-        })
+        });
 
         domElement.theCart.append(cartItem);
     });
 }
 
 export default displayLikedRecipe;
+
+window.addEventListener('load', () => {
+    cartItem = common.readStorage({
+        key: 'cartItems',
+        isObject: true
+    })
+
+    displayLikedRecipe(cartItem);
+    console.log(cartItem);
+})
