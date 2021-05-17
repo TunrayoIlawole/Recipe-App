@@ -537,6 +537,7 @@ function getResults(searchQuery) {
       q: searchQuery
     }
   }).then(response => {
+    document.querySelector('.error').classList.add('hidden');
     return response.data;
   }).catch(error => {
     const loader = document.querySelector('.loader');
