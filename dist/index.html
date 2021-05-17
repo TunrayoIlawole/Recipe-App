@@ -8,7 +8,7 @@
     <title>forkify // Search over 1,000,000 recipes</title>
 </head>
 <body>
-    <div class="modal">
+    <div class="modal hidden">
         <button class="close-modal">&times;</button>
         <h1>Recipe of The Day ✨</h1>
         <div class="recipe-con">
@@ -37,17 +37,23 @@
     </div>
     <div class="container">
         <header class="header">
-            <img src="/logo.f74eab89.png" alt="logo" class="header-logo">
-            <form class="search">
-                <input type="text" class="search-field" placeholder="Seach over 1,000,000 recipes...">
-                <button class="btn search-btn">
-                    <svg class="search-icon">
-                        <use href="/icons.dcbe9a22.svg"></use>
-                    </svg>
-                    <span>Search</span>
-                </button>
-            </form>
-            <p class="heart">🤍</p> 
+            <div class="header-main">
+                <img src="/logo.f74eab89.png" alt="logo" class="header-logo">
+                <form class="search">
+                    <input type="text" class="search-field" placeholder="Seach over 1,000,000 recipes...">
+                    <button class="btn search-btn">
+                        <svg class="search-icon">
+                            <use href="/icons.dcbe9a22.svg"></use>
+                        </svg>
+                        <span>Search</span>
+                    </button>
+                </form>
+                <p class="heart">🤍</p> 
+            </div>
+            <div class="header-bottom">
+                <p>Feeling spontaneous? Generate a random recipe🍝</p>
+                <button class="btn-random">Generate Recipe</button>
+            </div>
         </header>
         <div class="cart">
             <p class="cart-empty">Add a recipe to your favourites list</p>
@@ -108,7 +114,7 @@
 
     </div>
 
-    <div class="overlay"></div>    
+    <div class="overlay hidden"></div>    
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/index.b504a646.js"></script>

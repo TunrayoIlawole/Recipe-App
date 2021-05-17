@@ -39,9 +39,15 @@ body {
   overflow: hidden;
   box-shadow: 0 2rem 6rem 0.5rem rgba(101, 90, 86, 0.2);
   display: grid;
-  grid-template-rows: 10rem minmax(100rem, auto);
+  grid-template-rows: 12rem minmax(100rem, auto);
   grid-template-columns: 1.1fr 2fr 1.1fr;
-  grid-template-areas: "head head head" "list recipe shopping"; 
+  grid-template-areas: "head head head" "list recipe shopping";
+}
+
+button {
+  outline: none;
+  border: none;
+  cursor: pointer;
 }
 
 @media only screen and (max-width: 68.75em) {
@@ -197,11 +203,30 @@ body {
 .header {
   grid-area: head;
   background-color: #F9F5F3;
+  padding: 0 10px;
+}
+
+.header-main {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 10px;
+  padding: 0 10px
 }
+
+.header-bottom {
+  display: flex;
+  text-align: center;
+  margin-top: -5px;
+}
+
+.header-bottom button {
+  font-size: 1rem;
+  text-transform: capitalize;
+  padding: 7px;
+  background-image: linear-gradient(to right bottom, #FBDB89, #F48982);
+  border-radius: 5px;
+}
+
 .header-logo {
   margin-left: 4rem;
   height: 4.5rem;
@@ -772,11 +797,11 @@ border-top: 1px solid #fff;
 
 .modal {
   position: absolute;
-  top: 350px;
+  top: 310px;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 80%;
-  height: 100vh;
+  height: 90vh;
   text-align: center;
   background-color: #FFF;
   padding: 3rem 6rem;
