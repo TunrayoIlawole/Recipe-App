@@ -7,6 +7,7 @@ function getResults(searchQuery) {
         }
     })
     .then(response => {
+        document.querySelector('.error').classList.add('hidden');
         return response.data;
     })
     .catch(error => {
