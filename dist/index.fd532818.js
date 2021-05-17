@@ -447,8 +447,8 @@ var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
 var _FunctionsGetResultsDefault = _parcelHelpers.interopDefault(_FunctionsGetResults);
 var _FunctionsDisplayResults = require('./Functions/displayResults');
 var _FunctionsDisplayResultsDefault = _parcelHelpers.interopDefault(_FunctionsDisplayResults);
-var _FunctionsDisplayDailyRecipe = require('./Functions/displayDailyRecipe');
-var _FunctionsDisplayDailyRecipeDefault = _parcelHelpers.interopDefault(_FunctionsDisplayDailyRecipe);
+var _FunctionsGetRandomRecipe = require('./Functions/getRandomRecipe');
+var _FunctionsGetRandomRecipeDefault = _parcelHelpers.interopDefault(_FunctionsGetRandomRecipe);
 const domElements = {
   form: document.querySelector('.search'),
   input: document.querySelector('.search-field'),
@@ -456,35 +456,17 @@ const domElements = {
   loader: document.querySelector('.loader-con'),
   theCart: document.querySelector('.cart'),
   heartIcon: document.querySelector('.heart'),
+  error: document.querySelector('.error'),
+  pageBtns: document.querySelector('.pagination'),
+  container: document.querySelector('.container'),
   modal: document.querySelector('.modal'),
   overlay: document.querySelector('.overlay'),
   modalClose: document.querySelector('.close-modal'),
-  error: document.querySelector('.error'),
-  pageBtns: document.querySelector('.pagination'),
-  container: document.querySelector('.container')
+  randomBtn: document.querySelector('.btn-random')
 };
 const loader = `
 <div class = "loader"></div>
 `;
-function showDailyRecipe() {
-  const foods = ['pizza', 'fish', 'beef', 'pasta', 'steak', 'cake'];
-  const randomFood = foods[Math.trunc(Math.random() * foods.length)];
-  console.log(randomFood);
-  domElements.modal.classList.remove('hidden');
-  domElements.overlay.classList.remove('hidden');
-  try {
-    const results = _FunctionsGetResultsDefault.default(randomFood);
-    results.then(response => {
-      const recipes = response.recipes;
-      const randomIndex = Math.trunc(Math.random() * recipes.length);
-      const randomRecipe = recipes[randomIndex];
-      console.log(randomRecipe);
-      _FunctionsDisplayDailyRecipeDefault.default(randomRecipe);
-    });
-  } catch (error) {
-    console.log(error);
-  }
-}
 let result;
 function handleSubmit(e) {
   e.preventDefault();
@@ -507,9 +489,14 @@ function handleSubmit(e) {
     console.log(error);
   }
 }
+function closeModal() {
+  domElements.modal.classList.add('hidden');
+  domElements.overlay.classList.add('hidden');
+}
 domElements.form.addEventListener('submit', handleSubmit);
 domElements.heartIcon.addEventListener('click', () => {
   domElements.theCart.classList.toggle('show');
+  domElements.overlay.classList.remove('hidden');
 });
 domElements.pageBtns.addEventListener('click', e => {
   const btn = e.target.closest('.btn-inline');
@@ -520,13 +507,14 @@ domElements.pageBtns.addEventListener('click', e => {
     _FunctionsDisplayResultsDefault.default(result, goToPage);
   }
 });
-window.addEventListener('load', showDailyRecipe);
-domElements.modalClose.addEventListener('click', () => {
-  domElements.modal.classList.add('hidden');
-  domElements.overlay.classList.add('hidden');
+domElements.randomBtn.addEventListener('click', _FunctionsGetRandomRecipeDefault.default);
+domElements.modalClose.addEventListener('click', closeModal);
+domElements.overlay.addEventListener('click', () => {
+  closeModal();
+  domElements.theCart.classList.remove('show');
 });
 
-},{"./Functions/getResults":"6ms5S","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y","./Functions/displayDailyRecipe":"27jae","./Functions/displayResults":"50V6Q"}],"6ms5S":[function(require,module,exports) {
+},{"./Functions/getResults":"6ms5S","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y","./Functions/displayResults":"50V6Q","./Functions/getRandomRecipe":"5Av4P"}],"6ms5S":[function(require,module,exports) {
 var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
 _parcelHelpers.defineInteropFlag(exports);
 var _api = require('./api');
@@ -549,40 +537,7 @@ function getResults(searchQuery) {
 }
 exports.default = getResults;
 
-},{"./api":"7aSqL","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"27jae":[function(require,module,exports) {
-var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
-_parcelHelpers.defineInteropFlag(exports);
-const domElements = {
-  dailyRecipe: document.querySelector('.recipe-con')
-};
-const displayDailyRecipe = result => {
-  const markup = `
-    <div class = "recipe-image">
-        <img src = "${result.image_url}" alt = "${result.title}" />
-    </div>
-    <h3>${result.title}</h3>
-    <div class = "recipe-details">
-        <div class="recipe-directions">
-            <h2 class="heading-2">How to cook it</h2>
-            <p class="recipe-directions-text">
-                This recipe was carefully designed and tested by
-                <span class="recipe-publisher">${result.publisher}</span>. Please check out
-                directions at their website.
-            </p>
-            <a
-                class="btn-small recipe-btn"
-                href="#"
-                target="_blank"
-            >
-                <span>Directions ➡️</span>
-            </a>
-        </div>
-    </div>`;
-  domElements.dailyRecipe.innerHTML = markup;
-};
-exports.default = displayDailyRecipe;
-
-},{"@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"50V6Q":[function(require,module,exports) {
+},{"./api":"7aSqL","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"50V6Q":[function(require,module,exports) {
 var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
 _parcelHelpers.defineInteropFlag(exports);
 var _displayResult = require('./displayResult');
@@ -1011,6 +966,71 @@ const getButton = (page, type) => {
     `;
 };
 exports.default = getButton;
+
+},{"@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"5Av4P":[function(require,module,exports) {
+var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
+_parcelHelpers.defineInteropFlag(exports);
+var _displayRandomRecipe = require('./displayRandomRecipe');
+var _displayRandomRecipeDefault = _parcelHelpers.interopDefault(_displayRandomRecipe);
+var _getResults = require('./getResults');
+var _getResultsDefault = _parcelHelpers.interopDefault(_getResults);
+const domElements = {
+  modal: document.querySelector('.modal'),
+  overlay: document.querySelector('.overlay'),
+  modalClose: document.querySelector('.close-modal'),
+  randomBtn: document.querySelector('.btn-random')
+};
+const getRandomRecipe = () => {
+  const foods = ['pizza', 'fish', 'beef', 'pasta', 'steak', 'cake', 'lasagna', 'lobster'];
+  const randomFood = foods[Math.trunc(Math.random() * foods.length)];
+  domElements.modal.classList.remove('hidden');
+  domElements.overlay.classList.remove('hidden');
+  try {
+    const results = _getResultsDefault.default(randomFood);
+    results.then(response => {
+      const recipes = response.recipes;
+      const randomIndex = Math.trunc(Math.random() * recipes.length);
+      const randomRecipe = recipes[randomIndex];
+      _displayRandomRecipeDefault.default(randomRecipe);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+exports.default = getRandomRecipe;
+
+},{"./displayRandomRecipe":"2nn9R","./getResults":"6ms5S","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"2nn9R":[function(require,module,exports) {
+var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
+_parcelHelpers.defineInteropFlag(exports);
+const domElements = {
+  dailyRecipe: document.querySelector('.recipe-con')
+};
+const displayRandomRecipe = result => {
+  const markup = `
+    <div class = "recipe-image">
+        <img src = "${result.image_url}" alt = "${result.title}" />
+    </div>
+    <h3>${result.title}</h3>
+    <div class = "recipe-details">
+        <div class="recipe-directions">
+            <h2 class="heading-2">How to cook it</h2>
+            <p class="recipe-directions-text">
+                This recipe was carefully designed and tested by
+                <span class="recipe-publisher">${result.publisher}</span>. Please check out
+                directions at their website.
+            </p>
+            <a
+                class="btn-small recipe-btn"
+                href="${result.publisher_url}"
+                target="_blank"
+            >
+                <span>Directions ➡️</span>
+            </a>
+        </div>
+    </div>`;
+  domElements.dailyRecipe.innerHTML = markup;
+};
+exports.default = displayRandomRecipe;
 
 },{"@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}]},["A7H4y","4ee1I"], "4ee1I", "parcelRequire5515")
 

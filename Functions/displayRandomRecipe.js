@@ -2,7 +2,7 @@ const domElements = {
     dailyRecipe: document.querySelector('.recipe-con')
 }
 
-const displayDailyRecipe = (result) => {
+const displayRandomRecipe = (result) => {
     const markup = `
     <div class = "recipe-image">
         <img src = "${result.image_url}" alt = "${result.title}" />
@@ -18,7 +18,7 @@ const displayDailyRecipe = (result) => {
             </p>
             <a
                 class="btn-small recipe-btn"
-                href="#"
+                href="${result.publisher_url}"
                 target="_blank"
             >
                 <span>Directions ➡️</span>
@@ -30,4 +30,4 @@ const displayDailyRecipe = (result) => {
     domElements.dailyRecipe.innerHTML = markup;
 }
 
-export default displayDailyRecipe;
+export default displayRandomRecipe;
