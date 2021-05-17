@@ -1,6 +1,6 @@
 import getResults from './Functions/getResults';
 import displayResults from './Functions/displayResults';
-import displayDailyRecipe from './Functions/displayDailyRecipe';
+import getRandomRecipe from './Functions/getRandomRecipe';
 
 const domElements = {
     form: document.querySelector('.search'),
@@ -9,43 +9,19 @@ const domElements = {
     loader: document.querySelector('.loader-con'),
     theCart: document.querySelector('.cart'),
     heartIcon: document.querySelector('.heart'),
+    error: document.querySelector('.error'),
+    pageBtns: document.querySelector('.pagination'),
+    container: document.querySelector('.container'),
     modal: document.querySelector('.modal'),
     overlay: document.querySelector('.overlay'),
     modalClose: document.querySelector('.close-modal'),
-    error: document.querySelector('.error'),
-    pageBtns: document.querySelector('.pagination'),
-    container: document.querySelector('.container')
+    randomBtn: document.querySelector('.btn-random')
 }
 
 const loader = `
 <div class = "loader"></div>
 `;
 
-
-function showDailyRecipe() {
-    const foods = ['pizza', 'fish', 'beef', 'pasta', 'steak', 'cake'];
-    const randomFood = foods[Math.trunc(Math.random() * foods.length)];
-    console.log(randomFood);
-
-    domElements.modal.classList.remove('hidden');
-    domElements.overlay.classList.remove('hidden');
-
-    try {
-        const results = getResults(randomFood);
-
-        results.then(response => {
-            const recipes = response.recipes;
-
-            const randomIndex = Math.trunc(Math.random() * recipes.length);
-            const randomRecipe = recipes[randomIndex];
-
-            console.log(randomRecipe);
-            displayDailyRecipe(randomRecipe);
-        })
-    } catch (error) {
-        console.log(error);
-    }
-}
 
 let result;
 
@@ -82,10 +58,16 @@ function handleSubmit(e) {
     }
 }
 
+function closeModal() {
+    domElements.modal.classList.add('hidden');
+    domElements.overlay.classList.add('hidden');
+}
+
 domElements.form.addEventListener('submit', handleSubmit);
 
 domElements.heartIcon.addEventListener('click', () => {
     domElements.theCart.classList.toggle('show');
+    domElements.overlay.classList.remove('hidden');
 });
 
 domElements.pageBtns.addEventListener('click', e => {
@@ -99,9 +81,11 @@ domElements.pageBtns.addEventListener('click', e => {
     }
 })
 
-window.addEventListener('load', showDailyRecipe);
+domElements.randomBtn.addEventListener('click', getRandomRecipe);
 
-domElements.modalClose.addEventListener('click', () => {
-    domElements.modal.classList.add('hidden');
-    domElements.overlay.classList.add('hidden');
+domElements.modalClose.addEventListener('click', closeModal);
+
+domElements.overlay.addEventListener('click', () => {
+    closeModal();
+    domElements.theCart.classList.remove('show');
 })
