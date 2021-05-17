@@ -445,8 +445,8 @@ id) /*: string*/
 var _FunctionsGetResults = require('./Functions/getResults');
 var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
 var _FunctionsGetResultsDefault = _parcelHelpers.interopDefault(_FunctionsGetResults);
-var _FunctionsDisplayResult = require('./Functions/displayResult');
-var _FunctionsDisplayResultDefault = _parcelHelpers.interopDefault(_FunctionsDisplayResult);
+var _FunctionsDisplayResults = require('./Functions/displayResults');
+var _FunctionsDisplayResultsDefault = _parcelHelpers.interopDefault(_FunctionsDisplayResults);
 var _FunctionsDisplayDailyRecipe = require('./Functions/displayDailyRecipe');
 var _FunctionsDisplayDailyRecipeDefault = _parcelHelpers.interopDefault(_FunctionsDisplayDailyRecipe);
 const domElements = {
@@ -459,7 +459,9 @@ const domElements = {
   modal: document.querySelector('.modal'),
   overlay: document.querySelector('.overlay'),
   modalClose: document.querySelector('.close-modal'),
-  error: document.querySelector('.error')
+  error: document.querySelector('.error'),
+  pageBtns: document.querySelector('.pagination'),
+  container: document.querySelector('.container')
 };
 const loader = `
 <div class = "loader"></div>
@@ -483,6 +485,7 @@ function showDailyRecipe() {
     console.log(error);
   }
 }
+let result;
 function handleSubmit(e) {
   e.preventDefault();
   const inputValue = domElements.input.value;
@@ -493,12 +496,12 @@ function handleSubmit(e) {
   try {
     const results = _FunctionsGetResultsDefault.default(searchQuery);
     results.then(response => {
-      const recipes = response.recipes;
+      result = response.recipes;
       const loader = document.querySelector('.loader');
       if (loader) {
         loader.parentElement.removeChild(loader);
       }
-      _FunctionsDisplayResultDefault.default(recipes);
+      _FunctionsDisplayResultsDefault.default(result);
     });
   } catch (error) {
     console.log(error);
@@ -508,13 +511,22 @@ domElements.form.addEventListener('submit', handleSubmit);
 domElements.heartIcon.addEventListener('click', () => {
   domElements.theCart.classList.toggle('show');
 });
+domElements.pageBtns.addEventListener('click', e => {
+  const btn = e.target.closest('.btn-inline');
+  if (btn) {
+    const goToPage = parseInt(btn.dataset.goto, 10);
+    domElements.results.innerHTML = '';
+    domElements.pageBtns.innerHTML = '';
+    _FunctionsDisplayResultsDefault.default(result, goToPage);
+  }
+});
 window.addEventListener('load', showDailyRecipe);
 domElements.modalClose.addEventListener('click', () => {
   domElements.modal.classList.add('hidden');
   domElements.overlay.classList.add('hidden');
 });
 
-},{"./Functions/getResults":"6ms5S","./Functions/displayResult":"62ro5","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y","./Functions/displayDailyRecipe":"27jae"}],"6ms5S":[function(require,module,exports) {
+},{"./Functions/getResults":"6ms5S","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y","./Functions/displayDailyRecipe":"27jae","./Functions/displayResults":"50V6Q"}],"6ms5S":[function(require,module,exports) {
 var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
 _parcelHelpers.defineInteropFlag(exports);
 var _api = require('./api');
@@ -526,29 +538,74 @@ function getResults(searchQuery) {
     }
   }).then(response => {
     return response.data;
+  }).catch(error => {
+    const loader = document.querySelector('.loader');
+    if (loader) {
+      loader.parentElement.removeChild(loader);
+    }
+    document.querySelector('.error').classList.remove('hidden');
   });
 }
 exports.default = getResults;
 
-},{"./api":"7aSqL","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"62ro5":[function(require,module,exports) {
+},{"./api":"7aSqL","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"27jae":[function(require,module,exports) {
+var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
+_parcelHelpers.defineInteropFlag(exports);
+const domElements = {
+  dailyRecipe: document.querySelector('.recipe-con')
+};
+const displayDailyRecipe = result => {
+  const markup = `
+    <div class = "recipe-image">
+        <img src = "${result.image_url}" alt = "${result.title}" />
+    </div>
+    <h3>${result.title}</h3>
+    <div class = "recipe-details">
+        <div class="recipe-directions">
+            <h2 class="heading-2">How to cook it</h2>
+            <p class="recipe-directions-text">
+                This recipe was carefully designed and tested by
+                <span class="recipe-publisher">${result.publisher}</span>. Please check out
+                directions at their website.
+            </p>
+            <a
+                class="btn-small recipe-btn"
+                href="#"
+                target="_blank"
+            >
+                <span>Directions ➡️</span>
+            </a>
+        </div>
+    </div>`;
+  domElements.dailyRecipe.innerHTML = markup;
+};
+exports.default = displayDailyRecipe;
+
+},{"@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"50V6Q":[function(require,module,exports) {
+var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
+_parcelHelpers.defineInteropFlag(exports);
+var _displayResult = require('./displayResult');
+var _displayResultDefault = _parcelHelpers.interopDefault(_displayResult);
+var _displayButtons = require('./displayButtons');
+var _displayButtonsDefault = _parcelHelpers.interopDefault(_displayButtons);
+const displayResults = (recipes, page = 1, resPerPage = 10) => {
+  const start = (page - 1) * resPerPage;
+  const end = page * resPerPage;
+  _displayResultDefault.default(recipes.slice(start, end));
+  // render the pagination buttons
+  _displayButtonsDefault.default(page, recipes.length, resPerPage);
+};
+exports.default = displayResults;
+
+},{"./displayResult":"62ro5","./displayButtons":"5J4T3","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"62ro5":[function(require,module,exports) {
 var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
 _parcelHelpers.defineInteropFlag(exports);
 var _getClickedRecipe = require('./getClickedRecipe');
 var _getClickedRecipeDefault = _parcelHelpers.interopDefault(_getClickedRecipe);
 const domElements = {
-  results: document.querySelector('.results'),
-  loaderCon: document.querySelector('.loader'),
-  error: document.querySelector('.error')
+  results: document.querySelector('.results')
 };
-const loader = `
-<div class = "loader">
-    <svg>
-        <use href = "img/icons.svg#icon-cw"></use>
-    </svg>
-</div>
-`;
 const displayResult = results => {
-  domElements.error.classList.add('hidden');
   results.forEach(item => {
     const resultItem = document.createElement('li');
     resultItem.classList.add('preview');
@@ -796,8 +853,6 @@ var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
 _parcelHelpers.defineInteropFlag(exports);
 var _displayLikedRecipe = require('./displayLikedRecipe');
 var _displayLikedRecipeDefault = _parcelHelpers.interopDefault(_displayLikedRecipe);
-// import readStorage from './common';
-// import persistData from './common';
 const common = require('./common');
 const domElement = {
   heart: document.querySelector('.heart')
@@ -832,11 +887,9 @@ window.addEventListener('load', () => {
   _displayLikedRecipeDefault.default(cartItem);
 });
 
-},{"@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y","./displayLikedRecipe":"1SwjF","./common":"6ws4i"}],"1SwjF":[function(require,module,exports) {
+},{"./displayLikedRecipe":"1SwjF","./common":"6ws4i","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"1SwjF":[function(require,module,exports) {
 var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
 _parcelHelpers.defineInteropFlag(exports);
-// import readStorage from './common';
-// import persistData from './common';
 const common = require('./common');
 const domElement = {
   theCart: document.querySelector('.cart'),
@@ -904,7 +957,7 @@ window.addEventListener('load', () => {
   console.log(cartItem);
 });
 
-},{"@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y","./common":"6ws4i"}],"6ws4i":[function(require,module,exports) {
+},{"./common":"6ws4i","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"6ws4i":[function(require,module,exports) {
 exports.readStorage = ({ key, isObject }) => {
     const item = localStorage.getItem(key);
 
@@ -918,38 +971,45 @@ exports.readStorage = ({ key, isObject }) => {
 exports.persistData = ({ key, isObject, data }) => {
     localStorage.setItem(key, isObject ? JSON.stringify(data) : data);
 }
-},{}],"27jae":[function(require,module,exports) {
+},{}],"5J4T3":[function(require,module,exports) {
 var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
 _parcelHelpers.defineInteropFlag(exports);
+var _getButtons = require('./getButtons');
+var _getButtonsDefault = _parcelHelpers.interopDefault(_getButtons);
 const domElements = {
-  dailyRecipe: document.querySelector('.recipe-con')
+  pageBtns: document.querySelector('.pagination')
 };
-const displayDailyRecipe = result => {
-  const markup = `
-    <div class = "recipe-image">
-        <img src = "${result.image_url}" alt = "${result.title}" />
-    </div>
-    <h3>${result.title}</h3>
-    <div class = "recipe-details">
-        <div class="recipe-directions">
-            <h2 class="heading-2">How to cook it</h2>
-            <p class="recipe-directions-text">
-                This recipe was carefully designed and tested by
-                <span class="recipe-publisher">${result.publisher}</span>. Please check out
-                directions at their website.
-            </p>
-            <a
-                class="btn-small recipe-btn"
-                href="#"
-                target="_blank"
-            >
-                <span>Directions ➡️</span>
-            </a>
-        </div>
-    </div>`;
-  domElements.dailyRecipe.innerHTML = markup;
+const displayButtons = (page, numResults, resPerPage) => {
+  console.log('Hey');
+  const pages = Math.ceil(numResults / resPerPage);
+  let button;
+  if (page === 1 && pages > 1) {
+    console.log('Well');
+    button = _getButtonsDefault.default(page, 'next');
+  } else if (page < pages) {
+    button = `
+        ${_getButtonsDefault.default(page, 'prev')}
+        ${_getButtonsDefault.default(page, 'next')}
+        `;
+  } else if (page === pages && pages > 1) {
+    button = _getButtonsDefault.default(page, 'prev');
+  }
+  domElements.pageBtns.insertAdjacentHTML('afterbegin', button);
 };
-exports.default = displayDailyRecipe;
+exports.default = displayButtons;
+
+},{"./getButtons":"6kpdy","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"6kpdy":[function(require,module,exports) {
+var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
+_parcelHelpers.defineInteropFlag(exports);
+const getButton = (page, type) => {
+  return `
+        <button class="btn-inline pagination-btn-${type}" data-goto=${type === 'prev' ? page - 1 : page + 1}>
+            <span>${type === 'prev' ? '⬅️' : '➡️'}</span>
+            <span>Page ${type === 'prev' ? page - 1 : page + 1}</span>
+        </button>
+    `;
+};
+exports.default = getButton;
 
 },{"@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}]},["A7H4y","4ee1I"], "4ee1I", "parcelRequire5515")
 
