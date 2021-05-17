@@ -2,16 +2,7 @@ import getClickedRecipe from './getClickedRecipe';
 
 const domElements = {
     results: document.querySelector('.results'),
-    loaderCon: document.querySelector('.loader')
 }
-
-const loader = `
-<div class = "loader">
-    <svg>
-        <use href = "img/icons.svg#icon-cw"></use>
-    </svg>
-</div>
-`;
 
 const displayResult = (results) => {
     results.forEach(item => {
