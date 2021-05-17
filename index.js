@@ -1,5 +1,5 @@
 import getResults from './Functions/getResults';
-import displayResult from './Functions/displayResult';
+import displayResults from './Functions/displayResults';
 import displayDailyRecipe from './Functions/displayDailyRecipe';
 
 const domElements = {
@@ -12,7 +12,9 @@ const domElements = {
     modal: document.querySelector('.modal'),
     overlay: document.querySelector('.overlay'),
     modalClose: document.querySelector('.close-modal'),
-    error: document.querySelector('.error')
+    error: document.querySelector('.error'),
+    pageBtns: document.querySelector('.pagination'),
+    container: document.querySelector('.container')
 }
 
 const loader = `
@@ -45,6 +47,8 @@ function showDailyRecipe() {
     }
 }
 
+let result;
+
 function handleSubmit(e) {
     e.preventDefault();
 
@@ -61,7 +65,7 @@ function handleSubmit(e) {
         const results = getResults(searchQuery);
 
         results.then(response => {
-            const recipes = response.recipes;
+            result = response.recipes;
 
             const loader = document.querySelector('.loader');
 
@@ -69,7 +73,7 @@ function handleSubmit(e) {
                 loader.parentElement.removeChild(loader);
             }
 
-            displayResult(recipes);
+            displayResults(result);
         })
     }
     catch (error) {
@@ -82,6 +86,17 @@ domElements.form.addEventListener('submit', handleSubmit);
 
 domElements.heartIcon.addEventListener('click', () => {
     domElements.theCart.classList.toggle('show');
+});
+
+domElements.pageBtns.addEventListener('click', e => {
+    const btn = e.target.closest('.btn-inline');
+    if (btn) {
+        const goToPage = parseInt(btn.dataset.goto, 10);
+        domElements.results.innerHTML = '';
+        domElements.pageBtns.innerHTML = '';
+
+        displayResults(result, goToPage);
+    }
 })
 
 window.addEventListener('load', showDailyRecipe);
