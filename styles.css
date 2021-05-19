@@ -716,6 +716,10 @@ border-top: 1px solid #fff;
   pointer-events: none;
 }
 
+.cart-add {
+  font-size: 1.3rem;
+}
+
 .cart.show {
   display: block;
   opacity: 1;
