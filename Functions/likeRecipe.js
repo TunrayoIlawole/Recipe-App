@@ -22,7 +22,6 @@ const likeRecipe = (recipe, id, button) => {
         button.disabled = true;
     }
     
-    console.log(cart);
     common.persistData({ key: 'cartItems', isObject: true, data: cart })
 
     // localStorage.setItem('likes', JSON.stringify(cart));
