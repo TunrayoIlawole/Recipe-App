@@ -23,7 +23,7 @@ body {
   font-family: 'Nunito Sans', sans-serif;
   font-weight: 400;
   line-height: 1.6;
-  color: #655A56;
+  color: #FFF;
   background-image: linear-gradient(to right bottom, #FBDB89, #F48982);
   background-size: cover;
   background-repeat: no-repeat;
@@ -202,7 +202,7 @@ button {
 
 .header {
   grid-area: head;
-  background-color: #F9F5F3;
+  background-color: #E36389;
   padding: 0 10px;
 }
 
@@ -476,7 +476,7 @@ button {
 }
 
 .recipe {
-background-color: #F9F5F3;
+background-color: #E36389;
 border-top: 1px solid #fff; 
 }
 .recipe-fig {
