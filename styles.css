@@ -202,7 +202,7 @@ button {
 
 .header {
   grid-area: head;
-  background-color: #E36389;
+  background-color: #F9F5F3;
   padding: 0 10px;
 }
 
@@ -476,7 +476,7 @@ button {
 }
 
 .recipe {
-background-color: #E36389;
+background-color: #F9F5F3;
 border-top: 1px solid #fff; 
 }
 .recipe-fig {
